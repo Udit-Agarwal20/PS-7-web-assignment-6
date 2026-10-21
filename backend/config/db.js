@@ -1,17 +1,29 @@
 const mongoose = require("mongoose");
 
-const connectDB = async () => {
-  try {
-    if (!process.env.MONGO_URI) {
-      throw new Error("MONGO_URI is not defined in .env file");
-    }
+let isConnected = false;
 
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+const connectDB = async () => {
+  if (!process.env.MONGO_URI || process.env.DB_DISABLED === "true") {
+    console.warn("MongoDB Atlas connection disabled or MONGO_URI omitted. Running in database-disabled mode.");
+    isConnected = false;
+    return false;
+  }
+
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 3000,
+    });
     console.log(`MongoDB connected successfully: ${conn.connection.host}`);
+    isConnected = true;
+    return true;
   } catch (error) {
-    console.error("MongoDB connection error:", error.message);
-    process.exit(1);
+    console.error("MongoDB connection offline/error:", error.message);
+    console.warn("Running in database-disabled fallback mode. Database endpoints will return HTTP 503.");
+    isConnected = false;
+    return false;
   }
 };
 
-module.exports = connectDB;
+const isDbConnected = () => isConnected || mongoose.connection.readyState === 1;
+
+module.exports = { connectDB, isDbConnected };

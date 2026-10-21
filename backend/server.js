@@ -29,11 +29,24 @@ app.use(
   })
 );
 
+const { connectDB, isDbConnected } = require("./config/db");
+
 app.get("/api/health", (req, res) => {
   res.json({
     message: "Shop Inventory API is running",
+    database: isDbConnected() ? "connected" : "disconnected",
   });
 });
+
+const checkDatabase = (req, res, next) => {
+  if (!isDbConnected()) {
+    return res.status(503).json({
+      error: "Database unavailable",
+      message: "Database is currently operating in offline/disabled mode. MongoDB Atlas connection is not active.",
+    });
+  }
+  next();
+};
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
@@ -42,21 +55,19 @@ const stockRoutes = require("./routes/stockRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const errorHandler = require("./middleware/errorHandler");
 
-app.use("/api/auth", authRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/suppliers", supplierRoutes);
-app.use("/api/stock", stockRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/auth", checkDatabase, authRoutes);
+app.use("/api/products", checkDatabase, productRoutes);
+app.use("/api/suppliers", checkDatabase, supplierRoutes);
+app.use("/api/stock", checkDatabase, stockRoutes);
+app.use("/api/dashboard", checkDatabase, dashboardRoutes);
 
 app.use(errorHandler);
-
-const connectDB = require("./config/db");
 
 const PORT = process.env.PORT || 5000;
 const HOST = process.env.NODE_ENV === "production" ? "0.0.0.0" : (process.env.HOST || "127.0.0.1");
 
 if (require.main === module) {
-  connectDB().then(() => {
+  connectDB().finally(() => {
     app.listen(PORT, HOST, () => {
       console.log(`Server is running at http://${HOST}:${PORT}`);
     });
