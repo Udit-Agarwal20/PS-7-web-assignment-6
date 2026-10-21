@@ -281,10 +281,12 @@ npm run dev
 
 ---
 
-## 10. Live Deployments & Demo Video Links
+## 10. Live Deployments & Repository Links
 
-- **Live Application URL**: `[PENDING DEPLOYMENT]` *(Add live Vercel link here)*
-- **Live Backend API**: `[PENDING DEPLOYMENT]` *(Add live Render link here)*
+- **GitHub Repository**: [https://github.com/Udit-Agarwal20/PS-7-web-assignment-6](https://github.com/Udit-Agarwal20/PS-7-web-assignment-6)
+- **Live Frontend Application (Vercel)**: [https://ps7-inventory-frontend-udit-agarwal20s-projects.vercel.app](https://ps7-inventory-frontend-udit-agarwal20s-projects.vercel.app)
+- **Live Backend API (Render)**: [https://ps7-inventory-backend.onrender.com](https://ps7-inventory-backend.onrender.com)
+- **API Health Check Endpoint**: [https://ps7-inventory-backend.onrender.com/api/health](https://ps7-inventory-backend.onrender.com/api/health)
 - **Project Presentation (Google Drive)**: `[PENDING UPLOAD]` *(Add PPT Drive link here)*
 - **YouTube Demonstration Video**: `[PENDING PUBLISHING]` *(Add YouTube showcase video link here)*
 
