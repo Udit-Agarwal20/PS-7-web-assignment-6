@@ -9,7 +9,13 @@ const app = express();
 app.use(express.json());
 
 const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
-const allowedOrigins = [clientUrl, "http://localhost:5173", "http://127.0.0.1:5173"];
+const allowedOrigins = [
+  clientUrl,
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://ps7-inventory-frontend-udit-agarwal20s-projects.vercel.app",
+  "https://frontend-opal-xi-27lpd0w0vx.vercel.app",
+];
 
 app.use(
   cors({
@@ -17,7 +23,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      return callback(null, true);
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
     },
     credentials: true,
   })
